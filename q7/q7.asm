@@ -1,0 +1,94 @@
+ORG 0000H
+
+START:
+
+    MOV R0,#00H
+
+    MOV DPTR,#TABLE
+    MOV A,R0
+    MOVC A,@A+DPTR
+    MOV P1,A
+
+
+CHECK:
+
+    JB P2.0,DOWN_CHECK
+
+    ACALL DELAY
+
+    JB P2.0,DOWN_CHECK
+
+    INC R0
+
+    CJNE R0,#0AH,SHOW
+
+    MOV R0,#00H
+
+    SJMP SHOW
+
+
+DOWN_CHECK:
+
+    JB P2.1,CHECK
+
+    ACALL DELAY
+
+    JB P2.1,CHECK
+
+    MOV A,R0
+
+    JZ SET_NINE
+
+    DEC R0
+
+    SJMP SHOW
+
+
+SET_NINE:
+
+    MOV R0,#09H
+
+
+SHOW:
+
+    MOV DPTR,#TABLE
+
+    MOV A,R0
+    MOVC A,@A+DPTR
+
+    MOV P1,A
+
+    JNB P2.0,SHOW
+    JNB P2.1,SHOW
+
+    SJMP CHECK
+
+
+TABLE:
+
+    DB 3FH
+    DB 06H
+    DB 5BH
+    DB 4FH
+    DB 66H
+    DB 6DH
+    DB 7DH
+    DB 07H
+    DB 7FH
+    DB 6FH
+
+
+DELAY:
+
+    MOV R6,#20
+
+D1:
+    MOV R5,#255
+
+D2:
+    DJNZ R5,D2
+    DJNZ R6,D1
+
+    RET
+
+END
