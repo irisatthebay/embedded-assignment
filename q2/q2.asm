@@ -1,0 +1,38 @@
+ORG 0000H
+
+START:
+
+    SETB P2.0
+
+CHECK:
+
+    JB P2.0,OFF
+
+    MOV P3,#00H
+    ACALL DELAY
+
+    MOV P3,#0FFH
+    ACALL DELAY
+
+    SJMP CHECK
+
+OFF:
+
+    MOV P3,#0FFH
+    SJMP CHECK
+
+
+DELAY:
+
+    MOV R6,#20
+
+D1:
+    MOV R5,#255
+
+D2:
+    DJNZ R5,D2
+    DJNZ R6,D1
+
+    RET
+
+END
