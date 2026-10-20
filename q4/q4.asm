@@ -1,0 +1,63 @@
+ORG 0000H
+
+START:
+
+    MOV P1,#3FH
+
+CHECK:
+
+    JB P2.0,CHECK
+
+    ACALL DELAY
+
+    JB P2.0,CHECK
+
+    INC R0
+
+    CJNE R0,#0AH,DISPLAY
+
+    MOV R0,#00H
+
+
+DISPLAY:
+
+    MOV DPTR,#TABLE
+    MOV A,R0
+    MOVC A,@A+DPTR
+    MOV P1,A
+
+WAIT:
+
+    JNB P2.0,WAIT
+
+    SJMP CHECK
+
+
+TABLE:
+
+    DB 3FH
+    DB 06H
+    DB 5BH
+    DB 4FH
+    DB 66H
+    DB 6DH
+    DB 7DH
+    DB 07H
+    DB 7FH
+    DB 6FH
+
+
+DELAY:
+
+    MOV R6,#20
+
+D1:
+    MOV R5,#255
+
+D2:
+    DJNZ R5,D2
+    DJNZ R6,D1
+
+    RET
+
+END
