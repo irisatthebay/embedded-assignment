@@ -1,0 +1,93 @@
+ORG 0000H
+
+DIG1 EQU P2.0
+DIG2 EQU P2.1
+
+START:
+
+    MOV R0,#00H
+
+COUNT:
+
+    ACALL DISPLAY
+
+    INC R0
+
+    CJNE R0,#100,COUNT
+
+    MOV R0,#00H
+
+    SJMP COUNT
+
+
+DISPLAY:
+
+    MOV A,R0
+    MOV B,#10
+    DIV AB
+
+    MOV R6,A
+    MOV R7,B
+
+    MOV R5,#100
+
+REFRESH:
+
+    ; Tens digit
+
+    MOV DPTR,#TABLE
+
+    MOV A,R6
+    MOVC A,@A+DPTR
+
+    MOV P1,A
+
+    CLR DIG1
+    SETB DIG2
+
+    ACALL SHORT_DELAY
+
+
+    ; Units digit
+
+    MOV DPTR,#TABLE
+
+    MOV A,R7
+    MOVC A,@A+DPTR
+
+    MOV P1,A
+
+    CLR DIG2
+    SETB DIG1
+
+    ACALL SHORT_DELAY
+
+    DJNZ R5,REFRESH
+
+    RET
+
+
+TABLE:
+
+    DB 3FH
+    DB 06H
+    DB 5BH
+    DB 4FH
+    DB 66H
+    DB 6DH
+    DB 7DH
+    DB 07H
+    DB 7FH
+    DB 6FH
+
+
+SHORT_DELAY:
+
+    MOV R4,#20
+
+D1:
+    DJNZ R4,D1
+
+    RET
+
+END
